@@ -29,7 +29,7 @@ int main()
     struct sockaddr_in servaddr; 
     
     /* Socket creation */
-    sockfd = socket(AF_INET, SOCK_STREAM, 0); 
+    sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP); //tpc socket
     if (sockfd == -1) 
     { 
         printf("CLIENT: socket creation failed...\n"); 
