@@ -26,11 +26,11 @@
 
 int main(int argc, char* argv[])          /* input arguments are not used */
 { 
-    int sockfd, connfd ;  /* listening socket and connection socket file descriptors */
+    int sockfd;  /* listening socket and connection socket file descriptors */
     unsigned int len;     /* length of client address */
     struct sockaddr_in servaddr, client; 
     
-    int  len_rx, len_tx = 0;                     /* received and sent length, in bytes */
+    int  len_rx;                     /* received and sent length, in bytes */
     char buff_tx[BUF_SIZE] = "Hello client, I am the server";
     char buff_rx[BUF_SIZE];   /* buffers for reception  */
     
@@ -79,11 +79,11 @@ int main(int argc, char* argv[])          /* input arguments are not used */
     }
     
     len = sizeof(client); 
-  
+    
       /* Accept the data from incoming sockets in a iterative way */
       while(1)
       {
-        connfd = accept(sockfd, (struct sockaddr *)&client, &len); 
+        int connfd = accept(sockfd, (struct sockaddr *)&client, &len); 
         if (connfd < 0) 
         { 
             fprintf(stderr, "[SERVER-error]: connection not accepted. %d: %s \n", errno, strerror( errno ));
