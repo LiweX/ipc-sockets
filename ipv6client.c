@@ -47,6 +47,7 @@ int main()
     servaddr.sin6_family = AF_INET6; 
     servaddr.sin6_port = htons(PORT);
     inet_pton(AF_INET6, "fe80::6a0:99af:bb91:fd13" , &servaddr.sin6_addr);
+    servaddr.sin6_scope_id = if_nametoindex("enp11s0");
   
     /* try to connect the client socket to server socket */
     if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) != 0) 
