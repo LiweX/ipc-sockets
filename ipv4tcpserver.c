@@ -1,18 +1,12 @@
-/*standard symbols */
 #include <unistd.h>  
-
-/* sockets */
 #include <netdb.h> 
 #include <netinet/in.h> 
 #include <sys/socket.h> 
 #include <sys/types.h> 
 #include <arpa/inet.h>
-
-/* strings / errors*/
 #include <errno.h>
 #include <stdio.h> 
-#include <string.h> 
-#include "ipv4tcpserver.h"
+#include <string.h>
 
 /* server parameters */
 #define BUF_SIZE        100               /* Buffer rx, tx max size  */

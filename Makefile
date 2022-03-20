@@ -1,5 +1,7 @@
 CFLAGS=#-Wall -pedantic -Werror -Wextra -Wconversion -std=gnu11
 
+all: server client
+
 server: server.c ipv4tcpserver.o ipv4udpserver.o
 	gcc $(CFLAGS) server.c -o server ipv4tcpserver.o ipv4udpserver.o
 
@@ -25,4 +27,4 @@ ipv4udpclient.o: ipv4udpclient.c ipv4udpclient.h
 	gcc $(CFLAGS) -c ipv4udpclient.c
 
 clean:
-	rm -f *.o
+	rm -f *.o client server

@@ -1,9 +1,3 @@
-/*************************************************************************************/
-/* @file    client_1.c                                                               */
-/* @brief   This clients connects,                                                   */
-/*          sends a text, reads what server and disconnects                          */
-/*************************************************************************************/
-
 #include <netdb.h> 
 #include <stdio.h> 
 #include <stdlib.h> 
