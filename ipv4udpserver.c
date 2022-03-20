@@ -40,7 +40,7 @@ int ipv4udpserver(int port, char* address)          /* input arguments are not u
     /* assign IP, SERV_PORT, IPV4 */
     servaddr.sin_family      = AF_INET; 
     servaddr.sin_addr.s_addr = inet_addr(address); 
-    servaddr.sin_port        = htons(port);
+    servaddr.sin_port        = htons((uint16_t)port);
     
     /* Bind socket */
     if ((bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr))) != 0) 
@@ -56,10 +56,10 @@ int ipv4udpserver(int port, char* address)          /* input arguments are not u
     len = sizeof(client);
     
     while(1){
-        int n = recvfrom(sockfd, (char *)buff_rx, sizeof(buff_rx), 
+        long int n = recvfrom(sockfd, (char *)buff_rx, sizeof(buff_rx), 
                 MSG_WAITALL, ( struct sockaddr *) &client,
                 &len);
-        printf("Client udp: %s\n", buff_rx);
+        printf("Client udp: %s cantidad de bytes:%ld\n", buff_rx,n);
     } 
     return 0;
 }                      

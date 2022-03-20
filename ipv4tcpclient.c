@@ -7,7 +7,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h> 
 
-int ipv4tcpclient(int port, char* address,int buff_size) 
+int ipv4tcpclient(int port, char* address,long unsigned int buff_size) 
 { 
     char buf_tx[buff_size];
     int sockfd; 
@@ -31,7 +31,7 @@ int ipv4tcpclient(int port, char* address,int buff_size)
     /* assign IP, PORT */
     servaddr.sin_family = AF_INET; 
     servaddr.sin_addr.s_addr = inet_addr( address ); 
-    servaddr.sin_port = htons(port); 
+    servaddr.sin_port = htons((uint16_t)port); 
   
     /* try to connect the client socket to server socket */
     if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) != 0) 
@@ -51,4 +51,5 @@ int ipv4tcpclient(int port, char* address,int buff_size)
    
     /* close the socket */
     close(sockfd); 
+    return 0;
 } 

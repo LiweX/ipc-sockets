@@ -18,7 +18,7 @@ int ipv4tcpserver(int port, char* address)          /* input arguments are not u
     unsigned int len;     /* length of client address */
     struct sockaddr_in servaddr, client; 
     
-    int  len_rx;                     /* received and sent length, in bytes */
+    long int len_rx;                     /* received and sent length, in bytes */
     //char buff_tx[BUF_SIZE] = "Hello client, I am the server";
     char buff_rx[BUF_SIZE];   /* buffers for reception  */
     
@@ -41,7 +41,7 @@ int ipv4tcpserver(int port, char* address)          /* input arguments are not u
     /* assign IP, port, IPV4 */
     servaddr.sin_family      = AF_INET; 
     servaddr.sin_addr.s_addr = inet_addr(address); 
-    servaddr.sin_port        = htons(port); 
+    servaddr.sin_port        = htons((uint16_t)port); 
     
     
     /* Bind socket */

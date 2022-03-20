@@ -19,7 +19,7 @@ int ipv6server(int port, char* address,char* interface)          /* input argume
     unsigned int len;     /* length of client address */
     struct sockaddr_in6 servaddr, client; 
     
-    int  len_rx;                     /* received and sent length, in bytes */
+    long int len_rx;                     /* received and sent length, in bytes */
     char buff_tx[BUF_SIZE] = "Hello client, I am the server";
     char buff_rx[BUF_SIZE];   /* buffers for reception  */
     
@@ -47,7 +47,7 @@ int ipv6server(int port, char* address,char* interface)          /* input argume
   
     /* assign IP, SERV_PORT, IPV6 */
     servaddr.sin6_family      = AF_INET6; 
-    servaddr.sin6_port        = htons(port);
+    servaddr.sin6_port        = htons((uint16_t)port);
     inet_pton(AF_INET6, address, &servaddr.sin6_addr);
     servaddr.sin6_scope_id = if_nametoindex(interface);
     

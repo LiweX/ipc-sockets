@@ -7,13 +7,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h> 
 #include <net/if.h>
-
-#define SERVER_ADDRESS  "fe80::6a0:99af:bb91:fd13"     /* server IP */
-#define PORT            8080 
  
  
 /* This clients connects, sends a text and disconnects */
-int ipv6client(int port,char*address,char*iterface,int buff_size) 
+int ipv6client(int port,char*address,char*iterface,long unsigned int buff_size) 
 { 
     char buf_tx[buff_size];
     int sockfd; 
@@ -36,7 +33,7 @@ int ipv6client(int port,char*address,char*iterface,int buff_size)
 
     /* assign IP, PORT */
     servaddr.sin6_family = AF_INET6; 
-    servaddr.sin6_port = htons(PORT);
+    servaddr.sin6_port = htons((uint16_t)port);
     inet_pton(AF_INET6, address, &servaddr.sin6_addr);
     servaddr.sin6_scope_id = if_nametoindex(iterface);
   
@@ -59,4 +56,5 @@ int ipv6client(int port,char*address,char*iterface,int buff_size)
        
     /* close the socket */
     close(sockfd); 
+    return 0;
 } 
