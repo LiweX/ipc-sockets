@@ -65,41 +65,43 @@ int ipv4tcpserver(int port, char* address)          /* input arguments are not u
     {
         printf("[IPV4_TCP_SERVER]: Listening on port %d \n\n", ntohs(servaddr.sin_port) ); 
     }
-    
-    len = sizeof(client); 
-    
-      /* Accept the data from incoming sockets in a iterative way */
-      while(1)
-      {
-        int connfd = accept(sockfd, (struct sockaddr *)&client, &len); 
-        if (connfd < 0) 
-        { 
-            fprintf(stderr, "[IPV4_TCP_SERVER-error]: connection not accepted. %d: %s \n", errno, strerror( errno ));
-            return -1;
-        } 
-        else
-        {              
-            while(1) /* read data from a client socket till it is closed */ 
-            {  
-                /* read client message, copy it into buffer */
-                len_rx = read(connfd, buff_rx, sizeof(buff_rx));  
+    int n_con = 0;
+    len = sizeof(client);
+    while(1)
+    {
+        int connfd = accept(sockfd, (struct sockaddr *)&client, &len);
+        n_con++; 
+        int pid = fork();
+        if (pid==0)
+        {
+            if (connfd < 0) 
+            { 
+                fprintf(stderr, "[IPV4_TCP_SERVER-error]: connection not accepted. %d: %s \n", errno, strerror( errno ));
+                return -1;
+            } 
+            else
+            {              
+                while(1) /* read data from a client socket till it is closed */ 
+                {  
+                    /* read client message, copy it into buffer */
+                    len_rx = read(connfd, buff_rx, sizeof(buff_rx));  
                 
-                if(len_rx == -1)
-                {
-                    fprintf(stderr, "[IPV4_TCP_SERVER-error]: connfd cannot be read. %d: %s \n", errno, strerror( errno ));
-                }
-                else if(len_rx == 0) /* if length is 0 client socket closed, then exit */
-                {
-                    printf("[IPV4_TCP_SERVER]: client socket closed \n\n");
-                    close(connfd);
-                    break; 
-                }
-                else
-                {
-                    //write(connfd, buff_tx, strlen(buff_tx)); //mensaje de recepcion
-                    printf("[IPV4_TCP_Client]: %s \n", buff_rx);
-                }            
-            }  
-        }                      
+                    if(len_rx == -1)
+                    {
+                        fprintf(stderr, "[IPV4_TCP_SERVER-error]: connfd cannot be read. %d: %s \n", errno, strerror( errno ));
+                    }
+                    else if(len_rx == 0) /* if length is 0 client socket closed, then exit */
+                    {
+                        printf("[IPV4_TCP_SERVER]: client %d socket closed \n\n",n_con);
+                        close(connfd);
+                        break; 
+                    }
+                    else
+                    {
+                        printf("[IPV4_TCP_CLIENT_%d]: %s \n", n_con, buff_rx);
+                    }            
+                }  
+            } 
+        }                        
     }    
 } 

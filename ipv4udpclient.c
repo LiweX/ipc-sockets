@@ -8,6 +8,8 @@
 #include <arpa/inet.h> 
 #include <unistd.h>
 
+
+
 int ipv4udpclient(int port,char*address,int buff_size) 
 {
     char buf_tx[buff_size];
@@ -32,23 +34,14 @@ int ipv4udpclient(int port,char*address,int buff_size)
     servaddr.sin_family = AF_INET; 
     servaddr.sin_addr.s_addr = inet_addr(address); 
     servaddr.sin_port = htons(port); 
-  
-    //int n, len;
-    
-    while(1){
+
+    while (1)
+    {
         read(0,buf_tx,buff_size);
-        if(strstr(buf_tx,"exit")) break;
-        sendto(sockfd, (const char *)buf_tx, strlen(buf_tx),
+        sendto(sockfd, (const char *)buf_tx, sizeof(buf_tx),
         MSG_CONFIRM, (const struct sockaddr *) &servaddr, 
             sizeof(servaddr));
-    }   
-           
-    // n = recvfrom(sockfd, (char *)buf_rx, MAX_SIZE,               //esto es para recepcion
-    //             MSG_WAITALL, (struct sockaddr *) &servaddr,
-    //             &len);
-    // buf_rx[n] = '\0';
-    // printf("Server : %s\n", buf_rx);
-   
+    }
     close(sockfd);
     return 0;
 } 

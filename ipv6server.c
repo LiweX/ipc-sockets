@@ -1,4 +1,3 @@
-
 #include <unistd.h>  
 #include <netdb.h> 
 #include <netinet/in.h> 
@@ -11,9 +10,6 @@
 #include <string.h> 
 
 /* server parameters */
-#define INTERFACE "enp11s0"
-#define SERV_PORT       8080              /* port */
-#define SERV_HOST_ADDR "fe80::6a0:99af:bb91:fd13"  
 #define BUF_SIZE        100               /* Buffer rx, tx max size  */
 #define BACKLOG         5                 /* Max. client pending connections  */
 
@@ -78,39 +74,43 @@ int ipv6server(int port, char* address,char* interface)          /* input argume
     }
     
     len = sizeof(client); 
-    
+    int n_con = 0;
       /* Accept the data from incoming sockets in a iterative way */
       while(1)
       {
-        int connfd = accept(sockfd, (struct sockaddr *)&client, &len); 
-        if (connfd < 0) 
-        { 
-            fprintf(stderr, "[IPV6_SERVER-error]: connection not accepted. %d: %s \n", errno, strerror( errno ));
-            return -1;
-        } 
-        else
-        {              
-            while(1) /* read data from a client socket till it is closed */ 
-            {  
+        int connfd = accept(sockfd, (struct sockaddr *)&client, &len);
+        n_con++; 
+        int pid = fork();
+        if(pid==0){
+            if (connfd < 0) 
+            { 
+                fprintf(stderr, "[IPV6_SERVER-error]: connection not accepted. %d: %s \n", errno, strerror( errno ));
+                return -1;
+            } 
+            else
+            {              
+                while(1) /* read data from a client socket till it is closed */ 
+                {  
                 /* read client message, copy it into buffer */
                 len_rx = read(connfd, buff_rx, sizeof(buff_rx));  
                 
-                if(len_rx == -1)
-                {
-                    fprintf(stderr, "[IPV6_SERVER-error]: connfd cannot be read. %d: %s \n", errno, strerror( errno ));
-                }
-                else if(len_rx == 0) /* if length is 0 client socket closed, then exit */
-                {
-                    printf("[IPV6_SERVER]: client socket closed \n\n");
-                    close(connfd);
-                    break; 
-                }
-                else
-                {
+                    if(len_rx == -1)
+                    {
+                        fprintf(stderr, "[IPV6_SERVER-error]: connfd cannot be read. %d: %s \n", errno, strerror( errno ));
+                    }
+                    else if(len_rx == 0) /* if length is 0 client socket closed, then exit */
+                    {
+                        printf("[IPV6_SERVER]: client %d socket closed \n\n",n_con);
+                        close(connfd);
+                        break; 
+                    }
+                    else
+                    {
                     write(connfd, buff_tx, strlen(buff_tx));
-                    printf("[IPV6_CLIENT]: %s \n", buff_rx);
-                }            
-            }  
-        }                      
+                    printf("[IPV6_CLIENT_%d]: %s \n", n_con, buff_rx);
+                    }            
+                }  
+            }      
+        }                
     }    
 } 

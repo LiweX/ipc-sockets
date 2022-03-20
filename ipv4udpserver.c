@@ -56,15 +56,10 @@ int ipv4udpserver(int port, char* address)          /* input arguments are not u
     len = sizeof(client);
     
     while(1){
-        int n = recvfrom(sockfd, (char *)buff_rx, BUF_SIZE, 
+        int n = recvfrom(sockfd, (char *)buff_rx, sizeof(buff_rx), 
                 MSG_WAITALL, ( struct sockaddr *) &client,
                 &len);
-        buff_rx[n] = '\0';
         printf("Client udp: %s\n", buff_rx);
-        // sendto(sockfd, (const char *)buff_tx, strlen(buff_tx), //esto es para enviar.
-        //     MSG_CONFIRM, (const struct sockaddr *) &client,
-        //     len);
-        // printf("Hello message sent.\n"); 
     } 
     return 0;
 }                      
