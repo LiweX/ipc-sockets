@@ -16,9 +16,11 @@
 
 #define SERVER_ADDRESS  "192.168.0.148"     /* server IP */
 #define PORT            8080 
+#define MAX_SIZE 100
 
 /* Test sequences */
 char buf_tx[] = "Hello server. I am a client";
+char buf_rx[MAX_SIZE];
  
  
 /* This clients connects, sends a text and disconnects */
@@ -28,7 +30,7 @@ int main()
     struct sockaddr_in servaddr; 
     
     /* Socket creation */
-    sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP); //udp socket
+    sockfd = socket(AF_INET, SOCK_DGRAM, 0); //udp socket
     if (sockfd == -1) 
     { 
         printf("CLIENT: socket creation failed...\n"); 
@@ -47,19 +49,19 @@ int main()
     servaddr.sin_addr.s_addr = inet_addr( SERVER_ADDRESS ); 
     servaddr.sin_port = htons(PORT); 
   
-    /* try to connect the client socket to server socket */
-    if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) != 0) 
-    { 
-        printf("connection with the server failed...\n");  
-        return -1;
-    } 
-    
-    printf("connected to the server..\n"); 
-  
-    /* send test sequences*/
-    write(sockfd, buf_tx, sizeof(buf_tx));     
-   
+        int n, len;
        
-    /* close the socket */
-    close(sockfd); 
+    sendto(sockfd, (const char *)buf_tx, strlen(buf_tx),
+        MSG_CONFIRM, (const struct sockaddr *) &servaddr, 
+            sizeof(servaddr));
+    printf("Hello message sent.\n");
+           
+    n = recvfrom(sockfd, (char *)buf_rx, MAX_SIZE, 
+                MSG_WAITALL, (struct sockaddr *) &servaddr,
+                &len);
+    buf_rx[n] = '\0';
+    printf("Server : %s\n", buf_rx);
+   
+    close(sockfd);
+    return 0;
 } 
