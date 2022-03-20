@@ -33,12 +33,12 @@ int ipv4tcpserver(int port, char* address)          /* input arguments are not u
     sockfd = socket(AF_INET, SOCK_STREAM, 0); 
     if (sockfd == -1) 
     { 
-        fprintf(stderr, "[IPV4_SERVER-error]: socket creation failed. %d: %s \n", errno, strerror( errno ));
+        fprintf(stderr, "[IPV4_TCP_SERVER-error]: socket creation failed. %d: %s \n", errno, strerror( errno ));
         return -1;
     } 
     else
     {
-        printf("[IPV4_SERVER]: Socket successfully created..\n"); 
+        printf("[IPV4_TCP_SERVER]: Socket successfully created..\n"); 
     }
     
     /* clear structure */
@@ -53,23 +53,23 @@ int ipv4tcpserver(int port, char* address)          /* input arguments are not u
     /* Bind socket */
     if ((bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr))) != 0) 
     { 
-        fprintf(stderr, "[IPV4_SERVER-error]: socket bind failed. %d: %s \n", errno, strerror( errno ));
+        fprintf(stderr, "[IPV4_TCP_SERVER-error]: socket bind failed. %d: %s \n", errno, strerror( errno ));
         return -1;
     } 
     else
     {
-        printf("[IPV4_SERVER]: Socket successfully binded \n");
+        printf("[IPV4_TCP_SERVER]: Socket successfully binded \n");
     }
   
     /* Listen */
     if ((listen(sockfd, BACKLOG)) != 0) 
     { 
-        fprintf(stderr, "[IPV4_SERVER-error]: socket listen failed. %d: %s \n", errno, strerror( errno ));
+        fprintf(stderr, "[IPV4_TCP_SERVER-error]: socket listen failed. %d: %s \n", errno, strerror( errno ));
         return -1;
     } 
     else
     {
-        printf("[IPV4_SERVER]: Listening on port %d \n\n", ntohs(servaddr.sin_port) ); 
+        printf("[IPV4_TCP_SERVER]: Listening on port %d \n\n", ntohs(servaddr.sin_port) ); 
     }
     
     len = sizeof(client); 
@@ -80,7 +80,7 @@ int ipv4tcpserver(int port, char* address)          /* input arguments are not u
         int connfd = accept(sockfd, (struct sockaddr *)&client, &len); 
         if (connfd < 0) 
         { 
-            fprintf(stderr, "[IPV4_SERVER-error]: connection not accepted. %d: %s \n", errno, strerror( errno ));
+            fprintf(stderr, "[IPV4_TCP_SERVER-error]: connection not accepted. %d: %s \n", errno, strerror( errno ));
             return -1;
         } 
         else
@@ -92,18 +92,18 @@ int ipv4tcpserver(int port, char* address)          /* input arguments are not u
                 
                 if(len_rx == -1)
                 {
-                    fprintf(stderr, "[IPV4_SERVER-error]: connfd cannot be read. %d: %s \n", errno, strerror( errno ));
+                    fprintf(stderr, "[IPV4_TCP_SERVER-error]: connfd cannot be read. %d: %s \n", errno, strerror( errno ));
                 }
                 else if(len_rx == 0) /* if length is 0 client socket closed, then exit */
                 {
-                    printf("[IPV4_SERVER]: client socket closed \n\n");
+                    printf("[IPV4_TCP_SERVER]: client socket closed \n\n");
                     close(connfd);
                     break; 
                 }
                 else
                 {
                     //write(connfd, buff_tx, strlen(buff_tx)); //mensaje de recepcion
-                    printf("[IPV4_SERVER]: %s \n", buff_rx);
+                    printf("[IPV4_TCP_SERVER]: %s \n", buff_rx);
                 }            
             }  
         }                      
