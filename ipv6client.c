@@ -2,22 +2,20 @@
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <string.h> 
-#include <unistd.h>
 #include <sys/socket.h> 
+#include <unistd.h>
 #include <netinet/in.h>
 #include <arpa/inet.h> 
+#include <net/if.h>
 
 #define SERVER_ADDRESS  "fe80::6a0:99af:bb91:fd13"     /* server IP */
 #define PORT            8080 
-
-/* Test sequences */
-char buf_tx[] = "Hello server. I am a client";      
-char buf_rx[100];                     /* receive buffer */
  
  
 /* This clients connects, sends a text and disconnects */
-int main() 
+int ipv6client(int port,char*address,char*iterface,int buff_size) 
 { 
+    char buf_tx[buff_size];
     int sockfd; 
     struct sockaddr_in6 servaddr; 
     
@@ -39,8 +37,8 @@ int main()
     /* assign IP, PORT */
     servaddr.sin6_family = AF_INET6; 
     servaddr.sin6_port = htons(PORT);
-    inet_pton(AF_INET6, "fe80::6a0:99af:bb91:fd13" , &servaddr.sin6_addr);
-    servaddr.sin6_scope_id = if_nametoindex("enp11s0");
+    inet_pton(AF_INET6, address, &servaddr.sin6_addr);
+    servaddr.sin6_scope_id = if_nametoindex(iterface);
   
     /* try to connect the client socket to server socket */
     if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) != 0) 
@@ -52,9 +50,11 @@ int main()
     printf("connected to the server..\n"); 
   
     /* send test sequences*/
-    write(sockfd, buf_tx, sizeof(buf_tx));     
-    read(sockfd, buf_rx, sizeof(buf_rx));
-    printf("CLIENT:Received: %s \n", buf_rx);
+    while(1){
+        read(0,buf_tx,buff_size);
+        if(strstr(buf_tx,"exit")) break;
+        write(sockfd, buf_tx, sizeof(buf_tx));
+    }
    
        
     /* close the socket */

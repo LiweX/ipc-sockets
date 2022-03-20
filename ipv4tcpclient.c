@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include <arpa/inet.h> 
-#include <unistd.h>
 
 int ipv4tcpclient(int port, char* address,int buff_size) 
 { 

@@ -5,8 +5,9 @@
 #include <unistd.h>
 #include "ipv4tcpclient.h"
 #include "ipv4udpclient.h"
+#include "ipv6client.h"
 
-#define N_PARAMS 5
+#define N_PARAMS 6
 
 int main(int argc, char* argv[]){
 
@@ -18,8 +19,7 @@ int main(int argc, char* argv[]){
     int buff_size = atoi(argv[4]);
     int port = atoi(argv[3]);
     char *address = argv[2];
-
-    printf("puerto: %d\nip: %s\n",port,address);
+    char *interface = argv[5];
 
     if(strstr(protocol,"tcp")){
         printf("creando cliente tcp ipv4\n");
@@ -28,6 +28,10 @@ int main(int argc, char* argv[]){
     if(strstr(protocol,"udp")){
         printf("creando cliente udp ipv4\n");
         ipv4udpclient(port,address,buff_size); 
+    }
+    if(strstr(protocol,"ipv6")){
+        printf("creando cliente tcp ipv6\n");
+        ipv6client(port,address,interface,buff_size);
     }
  
     return 0;

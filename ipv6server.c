@@ -32,17 +32,17 @@ int ipv6server(int port, char* address,char* interface)          /* input argume
     sockfd = socket(AF_INET6, SOCK_STREAM, 0); //ipv6 tcp
     if (sockfd == -1) 
     { 
-        fprintf(stderr, "[SERVER-error]: socket creation failed. %d: %s \n", errno, strerror( errno ));
+        fprintf(stderr, "[IPV6_SERVER-error]: socket creation failed. %d: %s \n", errno, strerror( errno ));
         return -1;
     } 
     else
     {
-        printf("[SERVER]: Socket successfully created..\n"); 
+        printf("[IPV6_SERVER]: Socket successfully created..\n"); 
     }
 
     int flag = 1 ;
 	if(setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag)) == -1) {
-        fprintf(stderr, "[SERVER-error]: socket creation failed. %d: %s \n", errno, strerror( errno ));
+        fprintf(stderr, "[IPV6_SERVER-error]: socket creation failed. %d: %s \n", errno, strerror( errno ));
 		return -1;
 	}
 
@@ -58,23 +58,23 @@ int ipv6server(int port, char* address,char* interface)          /* input argume
     /* Bind socket */
     if ((bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr))) != 0) 
     { 
-        fprintf(stderr, "[SERVER-error]: socket bind failed. %d: %s \n", errno, strerror( errno ));
+        fprintf(stderr, "[IPV6_SERVER-error]: socket bind failed. %d: %s \n", errno, strerror( errno ));
         return -1;
     } 
     else
     {
-        printf("[SERVER]: Socket successfully binded \n");
+        printf("[IPV6_SERVER]: Socket successfully binded \n");
     }
   
     /* Listen */
     if ((listen(sockfd, BACKLOG)) != 0) 
     { 
-        fprintf(stderr, "[SERVER-error]: socket listen failed. %d: %s \n", errno, strerror( errno ));
+        fprintf(stderr, "[IPV6_SERVER-error]: socket listen failed. %d: %s \n", errno, strerror( errno ));
         return -1;
     } 
     else
     {
-        printf("[SERVER]: Listening on SERV_PORT %d \n\n", ntohs(servaddr.sin6_port) ); 
+        printf("[IPV6_SERVER]: Listening on SERV_PORT %d \n\n", ntohs(servaddr.sin6_port) ); 
     }
     
     len = sizeof(client); 
@@ -85,7 +85,7 @@ int ipv6server(int port, char* address,char* interface)          /* input argume
         int connfd = accept(sockfd, (struct sockaddr *)&client, &len); 
         if (connfd < 0) 
         { 
-            fprintf(stderr, "[SERVER-error]: connection not accepted. %d: %s \n", errno, strerror( errno ));
+            fprintf(stderr, "[IPV6_SERVER-error]: connection not accepted. %d: %s \n", errno, strerror( errno ));
             return -1;
         } 
         else
@@ -97,18 +97,18 @@ int ipv6server(int port, char* address,char* interface)          /* input argume
                 
                 if(len_rx == -1)
                 {
-                    fprintf(stderr, "[SERVER-error]: connfd cannot be read. %d: %s \n", errno, strerror( errno ));
+                    fprintf(stderr, "[IPV6_SERVER-error]: connfd cannot be read. %d: %s \n", errno, strerror( errno ));
                 }
                 else if(len_rx == 0) /* if length is 0 client socket closed, then exit */
                 {
-                    printf("[SERVER]: client socket closed \n\n");
+                    printf("[IPV6_SERVER]: client socket closed \n\n");
                     close(connfd);
                     break; 
                 }
                 else
                 {
                     write(connfd, buff_tx, strlen(buff_tx));
-                    printf("[SERVER]: %s \n", buff_rx);
+                    printf("[IPV6_CLIENT]: %s \n", buff_rx);
                 }            
             }  
         }                      

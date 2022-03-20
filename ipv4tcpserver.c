@@ -97,7 +97,7 @@ int ipv4tcpserver(int port, char* address)          /* input arguments are not u
                 else
                 {
                     //write(connfd, buff_tx, strlen(buff_tx)); //mensaje de recepcion
-                    printf("[IPV4_TCP_SERVER]: %s \n", buff_rx);
+                    printf("[IPV4_TCP_Client]: %s \n", buff_rx);
                 }            
             }  
         }                      
