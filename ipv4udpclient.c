@@ -1,9 +1,3 @@
-/*************************************************************************************/
-/* @file    client_1.c                                                               */
-/* @brief   This clients connects,                                                   */
-/*          sends a text, reads what server and disconnects                          */
-/*************************************************************************************/
-
 #include <netdb.h> 
 #include <stdio.h> 
 #include <stdlib.h> 
@@ -13,19 +7,11 @@
 #include <netinet/in.h>
 #include <arpa/inet.h> 
 #include <unistd.h>
+#include "ipv4udpclient.h"
 
-#define SERVER_ADDRESS  "192.168.0.148"     /* server IP */
-#define PORT            8080 
-#define MAX_SIZE 100
-
-/* Test sequences */
-char buf_tx[] = "Hello server. I am a client";
-char buf_rx[MAX_SIZE];
- 
- 
-/* This clients connects, sends a text and disconnects */
-int main() 
-{ 
+int ipv4udpclient(int port,char*address,int buff_size) 
+{
+    char buf_tx[buff_size];
     int sockfd; 
     struct sockaddr_in servaddr; 
     
@@ -41,26 +27,28 @@ int main()
         printf("CLIENT: Socket successfully created..\n"); 
     }
     
-    
     memset(&servaddr, 0, sizeof(servaddr));
 
     /* assign IP, PORT */
     servaddr.sin_family = AF_INET; 
-    servaddr.sin_addr.s_addr = inet_addr( SERVER_ADDRESS ); 
-    servaddr.sin_port = htons(PORT); 
+    servaddr.sin_addr.s_addr = inet_addr(address); 
+    servaddr.sin_port = htons(port); 
   
-        int n, len;
-       
-    sendto(sockfd, (const char *)buf_tx, strlen(buf_tx),
+    //int n, len;
+    
+    while(1){
+        read(0,buf_tx,buff_size);
+        if(strstr(buf_tx,"exit")) break;
+        sendto(sockfd, (const char *)buf_tx, strlen(buf_tx),
         MSG_CONFIRM, (const struct sockaddr *) &servaddr, 
             sizeof(servaddr));
-    printf("Hello message sent.\n");
+    }   
            
-    n = recvfrom(sockfd, (char *)buf_rx, MAX_SIZE, 
-                MSG_WAITALL, (struct sockaddr *) &servaddr,
-                &len);
-    buf_rx[n] = '\0';
-    printf("Server : %s\n", buf_rx);
+    // n = recvfrom(sockfd, (char *)buf_rx, MAX_SIZE,               //esto es para recepcion
+    //             MSG_WAITALL, (struct sockaddr *) &servaddr,
+    //             &len);
+    // buf_rx[n] = '\0';
+    // printf("Server : %s\n", buf_rx);
    
     close(sockfd);
     return 0;

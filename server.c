@@ -18,5 +18,6 @@ int main(int argc, char* argv[]){
     printf("puerto: %d\nip: %s\n",port,address);
     printf("levantando servidor tcp ipv4\n");
     ipv4tcpserver(port,address);
+    printf("levantando servidor udp ipv4\n");
     return 0;
 }

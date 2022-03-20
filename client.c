@@ -4,8 +4,9 @@
 #include <string.h> 
 #include <unistd.h>
 #include "ipv4tcpclient.h"
+#include "ipv4udpclient.h"
 
-#define N_PARAMS 4
+#define N_PARAMS 5
 
 int main(int argc, char* argv[]){
 
@@ -13,11 +14,21 @@ int main(int argc, char* argv[]){
         printf("Invalid argument\n");
         exit(EXIT_FAILURE);
     }
-    int buff_size = atoi(argv[3]);
-    int port = atoi(argv[2]);
-    char *address = argv[1];
+    char *protocol= argv[1];
+    int buff_size = atoi(argv[4]);
+    int port = atoi(argv[3]);
+    char *address = argv[2];
+
     printf("puerto: %d\nip: %s\n",port,address);
-    printf("creando cliente tcp ipv4\n");
-    ipv4tcpclient(port,address,buff_size);
+
+    if(strstr(protocol,"tcp")){
+        printf("creando cliente tcp ipv4\n");
+        ipv4tcpclient(port,address,buff_size);
+    }
+    if(strstr(protocol,"udp")){
+        printf("creando cliente udp ipv4\n");
+        ipv4udpclient(port,address,buff_size); 
+    }
+ 
     return 0;
 }
