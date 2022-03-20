@@ -1,9 +1,3 @@
-/*************************************************************************************/
-/* @file    client_1.c                                                               */
-/* @brief   This clients connects,                                                   */
-/*          sends a text, reads what server and disconnects                          */
-/*************************************************************************************/
-
 #include <netdb.h> 
 #include <stdio.h> 
 #include <stdlib.h> 
@@ -13,18 +7,11 @@
 #include <netinet/in.h>
 #include <arpa/inet.h> 
 #include <unistd.h>
+#include "ipv4tcpclient.h"
 
-#define SERVER_ADDRESS  "192.168.0.148"     /* server IP */
-#define PORT            8080 
-
-/* Test sequences */
-char buf_tx[] = "Hello server. I am a client";      
-char buf_rx[100];                     /* receive buffer */
- 
- 
-/* This clients connects, sends a text and disconnects */
-int main() 
+int ipv4tcpclient(int port, char* address,int buff_size) 
 { 
+    char buf_tx[buff_size];
     int sockfd; 
     struct sockaddr_in servaddr; 
     
@@ -45,8 +32,8 @@ int main()
 
     /* assign IP, PORT */
     servaddr.sin_family = AF_INET; 
-    servaddr.sin_addr.s_addr = inet_addr( SERVER_ADDRESS ); 
-    servaddr.sin_port = htons(PORT); 
+    servaddr.sin_addr.s_addr = inet_addr( address ); 
+    servaddr.sin_port = htons(port); 
   
     /* try to connect the client socket to server socket */
     if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) != 0) 
@@ -58,11 +45,12 @@ int main()
     printf("connected to the server..\n"); 
   
     /* send test sequences*/
-    write(sockfd, buf_tx, sizeof(buf_tx));     
-    read(sockfd, buf_rx, sizeof(buf_rx));
-    printf("CLIENT:Received: %s \n", buf_rx);
+    while(1){
+        read(0,buf_tx,buff_size);
+        if(strstr(buf_tx,"exit")) break;
+        write(sockfd, buf_tx, sizeof(buf_tx));
+    }
    
-       
     /* close the socket */
     close(sockfd); 
 } 

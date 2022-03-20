@@ -25,7 +25,7 @@ int ipv4tcpserver(int port, char* address)          /* input arguments are not u
     struct sockaddr_in servaddr, client; 
     
     int  len_rx;                     /* received and sent length, in bytes */
-    char buff_tx[BUF_SIZE] = "Hello client, I am the server";
+    //char buff_tx[BUF_SIZE] = "Hello client, I am the server";
     char buff_rx[BUF_SIZE];   /* buffers for reception  */
     
      
@@ -102,7 +102,7 @@ int ipv4tcpserver(int port, char* address)          /* input arguments are not u
                 }
                 else
                 {
-                    write(connfd, buff_tx, strlen(buff_tx));
+                    //write(connfd, buff_tx, strlen(buff_tx)); //mensaje de recepcion
                     printf("[IPV4_SERVER]: %s \n", buff_rx);
                 }            
             }  
