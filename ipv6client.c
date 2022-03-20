@@ -8,11 +8,10 @@
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <string.h> 
-#include <sys/socket.h> 
 #include <unistd.h>
+#include <sys/socket.h> 
 #include <netinet/in.h>
 #include <arpa/inet.h> 
-#include <unistd.h>
 
 #define SERVER_ADDRESS  "fe80::6a0:99af:bb91:fd13"     /* server IP */
 #define PORT            8080 

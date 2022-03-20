@@ -12,14 +12,13 @@
 #include <errno.h>
 #include <stdio.h> 
 #include <string.h> 
+#include "ipv4tcpserver.h"
 
 /* server parameters */
-#define SERV_PORT       8080              /* port */
-#define SERV_HOST_ADDR "192.168.0.148"     /* IP, only IPV4 support  */
 #define BUF_SIZE        100               /* Buffer rx, tx max size  */
 #define BACKLOG         5                 /* Max. client pending connections  */
 
-int main(int argc, char* argv[])          /* input arguments are not used */
+int ipv4tcpserver(int port, char* address)          /* input arguments are not used */
 { 
     int sockfd;  /* listening socket and connection socket file descriptors */
     unsigned int len;     /* length of client address */
@@ -34,43 +33,43 @@ int main(int argc, char* argv[])          /* input arguments are not used */
     sockfd = socket(AF_INET, SOCK_STREAM, 0); 
     if (sockfd == -1) 
     { 
-        fprintf(stderr, "[SERVER-error]: socket creation failed. %d: %s \n", errno, strerror( errno ));
+        fprintf(stderr, "[IPV4_SERVER-error]: socket creation failed. %d: %s \n", errno, strerror( errno ));
         return -1;
     } 
     else
     {
-        printf("[SERVER]: Socket successfully created..\n"); 
+        printf("[IPV4_SERVER]: Socket successfully created..\n"); 
     }
     
     /* clear structure */
     memset(&servaddr, 0, sizeof(servaddr));
   
-    /* assign IP, SERV_PORT, IPV4 */
+    /* assign IP, port, IPV4 */
     servaddr.sin_family      = AF_INET; 
-    servaddr.sin_addr.s_addr = inet_addr(SERV_HOST_ADDR); 
-    servaddr.sin_port        = htons(SERV_PORT); 
+    servaddr.sin_addr.s_addr = inet_addr(address); 
+    servaddr.sin_port        = htons(port); 
     
     
     /* Bind socket */
     if ((bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr))) != 0) 
     { 
-        fprintf(stderr, "[SERVER-error]: socket bind failed. %d: %s \n", errno, strerror( errno ));
+        fprintf(stderr, "[IPV4_SERVER-error]: socket bind failed. %d: %s \n", errno, strerror( errno ));
         return -1;
     } 
     else
     {
-        printf("[SERVER]: Socket successfully binded \n");
+        printf("[IPV4_SERVER]: Socket successfully binded \n");
     }
   
     /* Listen */
     if ((listen(sockfd, BACKLOG)) != 0) 
     { 
-        fprintf(stderr, "[SERVER-error]: socket listen failed. %d: %s \n", errno, strerror( errno ));
+        fprintf(stderr, "[IPV4_SERVER-error]: socket listen failed. %d: %s \n", errno, strerror( errno ));
         return -1;
     } 
     else
     {
-        printf("[SERVER]: Listening on SERV_PORT %d \n\n", ntohs(servaddr.sin_port) ); 
+        printf("[IPV4_SERVER]: Listening on port %d \n\n", ntohs(servaddr.sin_port) ); 
     }
     
     len = sizeof(client); 
@@ -81,7 +80,7 @@ int main(int argc, char* argv[])          /* input arguments are not used */
         int connfd = accept(sockfd, (struct sockaddr *)&client, &len); 
         if (connfd < 0) 
         { 
-            fprintf(stderr, "[SERVER-error]: connection not accepted. %d: %s \n", errno, strerror( errno ));
+            fprintf(stderr, "[IPV4_SERVER-error]: connection not accepted. %d: %s \n", errno, strerror( errno ));
             return -1;
         } 
         else
@@ -93,18 +92,18 @@ int main(int argc, char* argv[])          /* input arguments are not used */
                 
                 if(len_rx == -1)
                 {
-                    fprintf(stderr, "[SERVER-error]: connfd cannot be read. %d: %s \n", errno, strerror( errno ));
+                    fprintf(stderr, "[IPV4_SERVER-error]: connfd cannot be read. %d: %s \n", errno, strerror( errno ));
                 }
                 else if(len_rx == 0) /* if length is 0 client socket closed, then exit */
                 {
-                    printf("[SERVER]: client socket closed \n\n");
+                    printf("[IPV4_SERVER]: client socket closed \n\n");
                     close(connfd);
                     break; 
                 }
                 else
                 {
                     write(connfd, buff_tx, strlen(buff_tx));
-                    printf("[SERVER]: %s \n", buff_rx);
+                    printf("[IPV4_SERVER]: %s \n", buff_rx);
                 }            
             }  
         }                      
