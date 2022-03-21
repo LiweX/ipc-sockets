@@ -8,8 +8,7 @@
 #include <arpa/inet.h> 
 #include <net/if.h>
  
- 
-/* This clients connects, sends a text and disconnects */
+
 int ipv6client(int port,char*address,char*iterface,long unsigned int buff_size) 
 { 
     char buf_tx[buff_size];
@@ -27,7 +26,6 @@ int ipv6client(int port,char*address,char*iterface,long unsigned int buff_size)
     {
         printf("CLIENT: Socket successfully created..\n"); 
     }
-    
     
     memset(&servaddr, 0, sizeof(servaddr));
 
@@ -52,8 +50,7 @@ int ipv6client(int port,char*address,char*iterface,long unsigned int buff_size)
         if(strstr(buf_tx,"exit")) break;
         write(sockfd, buf_tx, sizeof(buf_tx));
     }
-   
-       
+     
     /* close the socket */
     close(sockfd); 
     return 0;

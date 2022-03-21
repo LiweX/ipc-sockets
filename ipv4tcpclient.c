@@ -25,7 +25,6 @@ int ipv4tcpclient(int port, char* address,long unsigned int buff_size)
         printf("CLIENT: Socket successfully created..\n"); 
     }
     
-    
     memset(&servaddr, 0, sizeof(servaddr));
 
     /* assign IP, PORT */
@@ -45,7 +44,7 @@ int ipv4tcpclient(int port, char* address,long unsigned int buff_size)
     /* send test sequences*/
     while(1){
         read(0,buf_tx,buff_size);
-        if(strstr(buf_tx,"exit")) break;
+        //if(strstr(buf_tx,"exit")) break;
         write(sockfd, buf_tx, sizeof(buf_tx));
     }
    

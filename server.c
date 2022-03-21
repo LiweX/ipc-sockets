@@ -3,13 +3,17 @@
 #include <stdlib.h> 
 #include <string.h> 
 #include <unistd.h>
-#include "ipv4tcpserver.h"
 #include "ipv4udpserver.h"
 #include "ipv6server.h"
+#include "tools.h"
 
 #define N_PARAMS 5
 
+
 int main(int argc, char* argv[]){
+
+    Speeds speeds;
+    reset_speeds(&speeds);
 
     if(argc!=N_PARAMS){
         printf("Invalid argument\n");
@@ -23,7 +27,7 @@ int main(int argc, char* argv[]){
     pid = fork();
     if(pid==0){
         printf("levantando servidor tcp ipv4\n");
-        ipv4tcpserver(port,ipv4address);
+        ipv4tcpserver(port,ipv4address,&speeds);
         return 0;   
     }
     pid = fork();
@@ -34,15 +38,15 @@ int main(int argc, char* argv[]){
     }
     pid = fork();
     if(pid==0){
-        printf("levantando servidor udp ipv6\n");
+        printf("levantando servidor tcp ipv6\n");
         ipv6server(port,ipv6address,interface);
         return 0;
     }    
-    char buffer[100];
     while (1)
     {
-        read(0,buffer,100);
-        if(strstr(buffer,"exit")) break;
+        // print_speeds(&speeds);
+        // sleep(1);
+        // system("clear");
     }
     
     return 0;
