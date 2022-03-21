@@ -12,10 +12,10 @@ void reset_speeds(Speeds* speeds){
 void print_speeds(Speeds* speeds){
     printf("ipv4 tcp %fBytes/s\nipv4 udp %fBytes/s\nipv6 tcp %fBytes/s\n",speeds->ipv4_tcp,speeds->ipv4_udp,speeds->ipv6_tcp);
 }
-double sumar_speeds(double**speeds_buffer,int n_con){
-    double suma=0;
-    for(int i=0;i>n_con;i++){
-        suma=suma+*speeds_buffer[i];
+long int sumar_speeds(long int*speeds_buffer,int* n_clients){
+    long int suma=0;
+    for(int i=0;i<*n_clients;i++){
+        suma=suma+speeds_buffer[i];
     }
     return suma;
 }

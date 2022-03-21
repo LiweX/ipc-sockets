@@ -12,25 +12,27 @@
 #include <time.h>
 
 /* server parameters */
-#define BUF_SIZE        100               /* Buffer rx, tx max size  */
+#define BUF_SIZE        1000000              /* Buffer rx, tx max size  */
 #define BACKLOG         5                 /* Max. client pending connections  */
 
 
-int ipv4tcpserver(int port, char* address,Speeds *speeds)          /* input arguments are not used */
+int ipv4tcpserver(int port, char* address)          /* input arguments are not used */
 { 
     int sockfd;  /* listening socket and connection socket file descriptors */
     unsigned int len;     /* length of client address */
     struct sockaddr_in servaddr, client; 
-    
-    long int len_rx;                     /* received and sent length, in bytes */
-    //char buff_tx[BUF_SIZE] = "Hello client, I am the server";
-    char buff_rx[BUF_SIZE];   /* buffers for reception  */
-    
-    double**speeds_buff = (double**)malloc(sizeof(double*));
-    if(speeds_buff == NULL){
+    int* n_con = (int*)malloc(sizeof(int));
+    if(n_con==NULL){
         printf("Memory allocation error");
         exit(EXIT_FAILURE);
     }
+    long int len_rx;                     /* received and sent length, in bytes */
+    char buff_rx[BUF_SIZE];   /* buffers for reception  */
+    // long int* speeds = (long int*)malloc(sizeof(long int));
+    // if(speeds == NULL){
+    //     printf("Memory allocation error");
+    //     exit(EXIT_FAILURE);
+    // }
 
     /* socket creation */
     sockfd = socket(AF_INET, SOCK_STREAM, 0); 
@@ -43,6 +45,11 @@ int ipv4tcpserver(int port, char* address,Speeds *speeds)          /* input argu
     {
         printf("[IPV4_TCP_SERVER]: Socket successfully created..\n"); 
     }
+    int flag = 1 ;
+	if(setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag)) == -1) {
+        fprintf(stderr, "[IPV4_TCP_SERVER-error]: socket creation failed. %d: %s \n", errno, strerror( errno ));
+		exit(EXIT_FAILURE);
+	}
     
     /* clear structure */
     memset(&servaddr, 0, sizeof(servaddr));
@@ -50,8 +57,8 @@ int ipv4tcpserver(int port, char* address,Speeds *speeds)          /* input argu
     /* assign IP, port, IPV4 */
     servaddr.sin_family      = AF_INET; 
     servaddr.sin_addr.s_addr = inet_addr(address); 
-    servaddr.sin_port        = htons((uint16_t)port); 
-    
+    servaddr.sin_port        = htons((uint16_t)port);
+
     
     /* Bind socket */
     if ((bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr))) != 0) 
@@ -74,14 +81,15 @@ int ipv4tcpserver(int port, char* address,Speeds *speeds)          /* input argu
     {
         printf("[IPV4_TCP_SERVER]: Listening on port %d \n\n", ntohs(servaddr.sin_port) ); 
     }
-    int n_con = 0;
     len = sizeof(client);
-    //int pid = fork();
-    //if(pid==0) while (1) speeds->ipv4_tcp=sumar_speeds(speeds_buff,n_con);
+    // int pid = fork();
+    // if(pid==0) while (1){
+    //     printf("TCPIPV4 speed: %ld\n",sumar_speeds(speeds,n_con));
+    // } 
     while(1)
     {
         int connfd = accept(sockfd, (struct sockaddr *)&client, &len);
-        n_con++; 
+        n_con[0]++; 
         int pid = fork();
         if (pid==0)
         {   
@@ -89,42 +97,48 @@ int ipv4tcpserver(int port, char* address,Speeds *speeds)          /* input argu
             if (connfd < 0) 
             { 
                 fprintf(stderr, "[IPV4_TCP_SERVER-error]: connection not accepted. %d: %s \n", errno, strerror( errno ));
-                return -1;
+                n_con[0]--;
+                exit(EXIT_FAILURE);
+                
             } 
             else
             {  
-                // if(n_con>1)
+                // if(*n_con>1)
                 // {
-                // speeds_buff = (double**)realloc(speeds_buff,sizeof(double*)*(unsigned long int)(n_con));
-                // if(speeds_buff==NULL) exit(EXIT_FAILURE);
-                // }            
+                //     speeds = (long int*)realloc(speeds,sizeof(long int)*(unsigned long int)(n_con));
+                //     if(speeds==NULL)
+                //     {
+                //         printf("error al realocar");
+                //         exit(EXIT_FAILURE);
+                //     }
+                // }
+                int n_client=n_con[0];            
                 while(1) /* read data from a client socket till it is closed */ 
                 {  
-                    clock_t start = clock();
-                    len_rx = read(connfd, buff_rx, sizeof(buff_rx));  
-                    clock_t end = clock();
-                    double time = (double)(end - start)/CLOCKS_PER_SEC;
+                    // clock_t start = clock();
+                    len_rx = recv(connfd, buff_rx, sizeof(buff_rx),0);  
+                    // clock_t end = clock();
+                    // double time = (double)(end - start)/CLOCKS_PER_SEC;
+
                     if(len_rx == -1)
                     {
                         fprintf(stderr, "[IPV4_TCP_SERVER-error]: connfd cannot be read. %d: %s \n", errno, strerror( errno ));
                     }
                     else if(len_rx == 0) /* if length is 0 client socket closed, then exit */
                     {
-                        printf("[IPV4_TCP_SERVER]: client %d socket closed \n\n",n_con);
-                        speeds_buff[n_con]= 0;
+                        printf("[IPV4_TCP_SERVER]: client %d socket closed \n\n",n_client);
+                        //speeds[n_client-1]= 0;
                         close(connfd);
                         break; 
                     }
                     else
                     {
-                        printf("[IPV4_TCP_CLIENT_%d]: %s \n", n_con, buff_rx);
-                       // *speeds_buff[n_con] = (double)((double)len_rx/time);
-                        speeds->ipv4_tcp=time;
-                        //printf("%lfBytes/seg",time);
+                        printf("[IPV4_TCP_CLIENT_%d]: %s \n", n_client, buff_rx);
+                        //speeds[n_client-1] = (long int)((double)len_rx/time);
+                        //printf("%ld Bytes sended in %lf seg\n",len_rx,time);
                     }            
                 }  
             } 
         }
-
     }    
 } 

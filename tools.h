@@ -7,5 +7,4 @@ typedef struct
 
 void reset_speeds(Speeds* speeds);
 void print_speeds(Speeds* speeds);
-double sumar_speeds(double**speeds_buffer,int n_con);
-int ipv4tcpserver(int port, char* address,Speeds* speeds);
+long int sumar_speeds(long int*speeds_buffer,int* n_clients);

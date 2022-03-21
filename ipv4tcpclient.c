@@ -7,11 +7,19 @@
 #include <netinet/in.h>
 #include <arpa/inet.h> 
 
-int ipv4tcpclient(int port, char* address,long unsigned int buff_size) 
+int ipv4tcpclient(int port, char* address,long unsigned int bytes) 
 { 
-    char buf_tx[buff_size];
+    char buf_tx[bytes];
     int sockfd; 
-    struct sockaddr_in servaddr; 
+    struct sockaddr_in servaddr;
+    // char* data = (char*)malloc(bytes);
+    // if(data==NULL){
+    //     printf("Memory allocation error");
+    //     exit(EXIT_FAILURE);
+    // }
+    // for(long unsigned int i=0;i<bytes;i++){
+    //     data[i] = (char) rand();
+    // }
     
     /* Socket creation */
     sockfd = socket(AF_INET, SOCK_STREAM, 0); //tpc socket
@@ -43,9 +51,10 @@ int ipv4tcpclient(int port, char* address,long unsigned int buff_size)
   
     /* send test sequences*/
     while(1){
-        read(0,buf_tx,buff_size);
+        read(0,buf_tx,bytes);
         //if(strstr(buf_tx,"exit")) break;
         write(sockfd, buf_tx, sizeof(buf_tx));
+        //send(sockfd,data,strlen(data),0);
     }
    
     /* close the socket */
