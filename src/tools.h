@@ -6,5 +6,5 @@ typedef struct
     long int total;
 }   Bytes;
 
-void set_struct(Bytes* bytes);
+void reset_struct(Bytes* bytes);
 void sumar_bytes(Bytes* bytes);

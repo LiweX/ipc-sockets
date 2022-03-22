@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include "tools.h"
 
-void set_struct(Bytes* bytes){
+void reset_struct(Bytes* bytes){
     bytes->ipv4_tcp=0;
     bytes->ipv4_udp=0;
     bytes->ipv6_tcp=0;

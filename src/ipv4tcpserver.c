@@ -89,7 +89,7 @@ int ipv4tcpserver(int port, char* address,long int* bytes)          /* input arg
             } 
             else
             {  
-                                            
+                long int bytesacumulados=0;
                 while(1) /* read data from a client socket till it is closed */ 
                 {     
                     len_rx = recv(connfd, buff_rx, BUF_SIZE,0);
@@ -101,12 +101,14 @@ int ipv4tcpserver(int port, char* address,long int* bytes)          /* input arg
                     else if(len_rx == 0) /* if length is 0 client socket closed, then exit */
                     {
                         printf("[IPV4_TCP_SERVER]: client %d socket closed \n\n",n_con);
+                        *bytes-=bytesacumulados;
                         close(connfd);
                         exit(EXIT_SUCCESS);
                     }
                     else
                     {
                         //printf("[IPV4_TCP_CLIENT_%d]: %s \n", n_con, buff_rx);
+                        bytesacumulados+=len_rx;
                         *bytes+=len_rx;
                     }            
                 }  

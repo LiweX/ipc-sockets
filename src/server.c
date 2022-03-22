@@ -43,7 +43,7 @@ int main(int argc, char* argv[]){
     char *ipv4address = argv[1];
     char *ipv6address = argv[2];
     char *interface = argv[4];
-    set_struct(bytes);
+    reset_struct(bytes);
     int pid;
     pid = fork();
     if(pid==0){

@@ -86,7 +86,8 @@ int ipv6server(int port, char* address,char* interface,long int* bytes)         
                 exit(EXIT_FAILURE);
             } 
             else
-            {              
+            {     
+                long int bytesacumulados=0;         
                 while(1) /* read data from a client socket till it is closed */ 
                 {  
                 /* read client message, copy it into buffer */
@@ -99,12 +100,14 @@ int ipv6server(int port, char* address,char* interface,long int* bytes)         
                     else if(len_rx == 0) /* if length is 0 client socket closed, then exit */
                     {
                         printf("[IPV6_SERVER]: client %d socket closed \n\n",n_con);
+                        *bytes-=bytesacumulados;
                         close(connfd);
                         exit(EXIT_SUCCESS);
                     }
                     else
                     {
                         //printf("[IPV4_TCP_CLIENT_%d]: %s \n", n_con, buff_rx);
+                        bytesacumulados+=len_rx;
                         *bytes+=len_rx;                        
                     }            
                 }  

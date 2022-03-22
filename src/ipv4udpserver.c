@@ -54,7 +54,6 @@ int ipv4udpserver(int port, char* address,long int* bytes)          /* input arg
     }
   
     len = sizeof(client);
-    
     while(1){
         long int n = recvfrom(sockfd, (char *)buff_rx, sizeof(buff_rx), 
                 MSG_WAITALL, ( struct sockaddr *) &client,
