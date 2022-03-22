@@ -9,7 +9,6 @@
 
 int ipv4tcpclient(int port, char* address,int bytes) 
 { 
- //   char buf_tx[bytes];
     int sockfd; 
     struct sockaddr_in servaddr;
     char data[bytes];
@@ -48,7 +47,7 @@ int ipv4tcpclient(int port, char* address,int bytes)
   
     /* send test sequences*/
     while(1){
-        //read(0,buf_tx,bytes);
+        //read(0,data,bytes);
         //if(strstr(buf_tx,"exit")) break;
         //write(sockfd, buf_tx, sizeof(buf_tx));
         send(sockfd,data,strlen(data),0);
