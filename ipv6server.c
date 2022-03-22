@@ -19,11 +19,10 @@ int ipv6server(int port, char* address,char* interface,long int* bytes)         
     int sockfd;  /* listening socket and connection socket file descriptors */
     unsigned int len;     /* length of client address */
     struct sockaddr_in6 servaddr, client; 
-    
+
     long int len_rx;                     /* received and sent length, in bytes */
     char buff_rx[BUF_SIZE];   /* buffers for reception  */
-    
-     
+      
     /* socket creation */
     sockfd = socket(AF_INET6, SOCK_STREAM, 0); //ipv6 tcp
     if (sockfd == -1) 

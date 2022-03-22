@@ -3,10 +3,12 @@
 #include <stdlib.h> 
 #include <string.h> 
 #include <unistd.h>
+#include <fcntl.h>
 #include <sys/shm.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <errno.h>
+#include <time.h>
 #include "ipv4tcpserver.h"
 #include "ipv4udpserver.h"
 #include "ipv6server.h"
@@ -18,6 +20,7 @@
 int main(int argc, char* argv[]){
 
     Bytes *bytes;
+    int fd = open("log.txt",O_WRONLY);
     int memoria_compartida = shmget(ftok(".", 'S'),sizeof(bytes),
             (IPC_CREAT | 0660));
     if(memoria_compartida < 0){
@@ -60,18 +63,25 @@ int main(int argc, char* argv[]){
         ipv6server(port,ipv6address,interface,&bytes->ipv6_tcp);
         exit(EXIT_SUCCESS);
     }
-    int seconds=0;    
+    int seconds=0;
+    char log[10000];
+    time_t rawtime;
+    char logtime[80];
     while (1)
     {   
+        struct tm * timeinfo;
         seconds++;
-        printf("IPV4 TCP SPEED: %ld Mbits/s\n",((bytes->ipv4_tcp)/seconds)*8/1000000);
-        printf("IPV4 UDP SPEED: %ld Mbits/s\n",((bytes->ipv4_udp)/seconds)*8/1000000);
-        printf("IPV6 TCP SPEED: %ld Mbits/s\n",((bytes->ipv6_tcp)/seconds)*8/1000000);
+        time(&rawtime);
+        timeinfo = localtime(&rawtime);
+        strftime(logtime,80,"%x - %X",timeinfo);
         sumar_bytes(bytes);
-        printf("TOTAL SPEED: %ld Mbits/s\n",((bytes->total)/seconds)*8/1000000);
+        sprintf(log,"%s\nIPV4 TCP SPEED: %ld Mbits/s\nIPV4 UDP SPEED: %ld Mbits/s\nIPV6 TCP SPEED: %ld Mbits/s\nTOTAL SPEED: %ld Mbits/s\n\n",logtime,
+                ((bytes->ipv4_tcp)/seconds)*8/1000000,((bytes->ipv4_udp)/seconds)*8/1000000,
+                ((bytes->ipv6_tcp)/seconds)*8/1000000,((bytes->total)/seconds)*8/1000000);
+        write(fd,log,strlen(log));
+        printf("%s",log);
         sleep(1);
         system("clear");
-           
     }
     return 0;
 }
