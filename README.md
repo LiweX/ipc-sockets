@@ -30,7 +30,7 @@ typedef struct
     long int total;
 }   Bytes;
 ```
-Se pasa la direccion de memoria correspondiente a su protocolo a los procesos hijos para que sumen la cantidad de bytes recibidos ahí y cada un segundo se realiza el calculo, se imprime en pantalla y se guarda en un archivo log.txt
+Se pasa la direccion de memoria, correspondiente a su protocolo, a los procesos hijos para que sumen la cantidad de bytes recibidos ahí y cada un segundo se realiza el calculo, se imprime en pantalla y se guarda en un archivo log.txt
 ## Funcionamiento
 ### Cliente
 El cliente se instancia de la siguiente forma:
@@ -46,5 +46,6 @@ El servidor se instancia de la siguiente forma:
 ej: ./server 127.0.0.1 ::1 8080 lo
 ```
 En este caso se esta instanciando un server que esta escuchando en el puerto 8080 en la direccion de loopback
+### Ejemplo de ejecución
 ![Captura de pantalla](/img/screenshot.png)
 En esta caputra se pueden ver dos clientes tcp ipv4 dos clientes tcp ipv6 y dos clientes udp ipv4 (las terminales pequeñas), el servidor (en la terminal de vscode) printeando la velocidad en Mbits/s y el `nload` viendo el trafico de la interfaz de loopback y los resultados se corresponden bastante bien.
