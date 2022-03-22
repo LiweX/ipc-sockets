@@ -1,1 +1,1 @@
-int ipv4tcpserver(int port, char* address);
+int ipv4tcpserver(int port, char* address,long int*bytes);

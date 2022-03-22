@@ -1,1 +1,1 @@
-int ipv6client(int port,char*address,char*iterface,long unsigned int buff_size);
+int ipv6client(int port,char*address,char*iterface,int bytes);

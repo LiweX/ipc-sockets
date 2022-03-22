@@ -16,23 +16,14 @@
 #define BACKLOG         5                 /* Max. client pending connections  */
 
 
-int ipv4tcpserver(int port, char* address)          /* input arguments are not used */
+int ipv4tcpserver(int port, char* address,long int* bytes)          /* input arguments are not used */
 { 
     int sockfd;  /* listening socket and connection socket file descriptors */
     unsigned int len;     /* length of client address */
+    int n_con=0;
     struct sockaddr_in servaddr, client; 
-    int* n_con = (int*)malloc(sizeof(int));
-    if(n_con==NULL){
-        printf("Memory allocation error");
-        exit(EXIT_FAILURE);
-    }
     long int len_rx;                     /* received and sent length, in bytes */
     char buff_rx[BUF_SIZE];   /* buffers for reception  */
-    // long int* speeds = (long int*)malloc(sizeof(long int));
-    // if(speeds == NULL){
-    //     printf("Memory allocation error");
-    //     exit(EXIT_FAILURE);
-    // }
 
     /* socket creation */
     sockfd = socket(AF_INET, SOCK_STREAM, 0); 
@@ -82,43 +73,27 @@ int ipv4tcpserver(int port, char* address)          /* input arguments are not u
         printf("[IPV4_TCP_SERVER]: Listening on port %d \n\n", ntohs(servaddr.sin_port) ); 
     }
     len = sizeof(client);
-    // int pid = fork();
-    // if(pid==0) while (1){
-    //     printf("TCPIPV4 speed: %ld\n",sumar_speeds(speeds,n_con));
-    // } 
     while(1)
     {
         int connfd = accept(sockfd, (struct sockaddr *)&client, &len);
-        n_con[0]++; 
+        n_con++;
         int pid = fork();
         if (pid==0)
         {   
-            
+             
             if (connfd < 0) 
             { 
                 fprintf(stderr, "[IPV4_TCP_SERVER-error]: connection not accepted. %d: %s \n", errno, strerror( errno ));
-                n_con[0]--;
-                exit(EXIT_FAILURE);
-                
+                n_con--;
+                exit(EXIT_FAILURE);       
             } 
             else
             {  
-                // if(*n_con>1)
-                // {
-                //     speeds = (long int*)realloc(speeds,sizeof(long int)*(unsigned long int)(n_con));
-                //     if(speeds==NULL)
-                //     {
-                //         printf("error al realocar");
-                //         exit(EXIT_FAILURE);
-                //     }
-                // }
-                int n_client=n_con[0];            
+                                            
                 while(1) /* read data from a client socket till it is closed */ 
                 {  
-                    // clock_t start = clock();
-                    len_rx = recv(connfd, buff_rx, sizeof(buff_rx),0);  
-                    // clock_t end = clock();
-                    // double time = (double)(end - start)/CLOCKS_PER_SEC;
+
+                    len_rx = recv(connfd, buff_rx, BUF_SIZE,0);
 
                     if(len_rx == -1)
                     {
@@ -126,16 +101,14 @@ int ipv4tcpserver(int port, char* address)          /* input arguments are not u
                     }
                     else if(len_rx == 0) /* if length is 0 client socket closed, then exit */
                     {
-                        printf("[IPV4_TCP_SERVER]: client %d socket closed \n\n",n_client);
-                        //speeds[n_client-1]= 0;
+                        printf("[IPV4_TCP_SERVER]: client %d socket closed \n\n",n_con);
                         close(connfd);
-                        break; 
+                        exit(EXIT_SUCCESS);
                     }
                     else
                     {
-                        printf("[IPV4_TCP_CLIENT_%d]: %s \n", n_client, buff_rx);
-                        //speeds[n_client-1] = (long int)((double)len_rx/time);
-                        //printf("%ld Bytes sended in %lf seg\n",len_rx,time);
+                        //printf("[IPV4_TCP_CLIENT_%d]: %s \n", n_con, buff_rx);
+                        *bytes+=len_rx;
                     }            
                 }  
             } 

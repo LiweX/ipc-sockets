@@ -9,12 +9,15 @@
 #include <net/if.h>
  
 
-int ipv6client(int port,char*address,char*iterface,long unsigned int buff_size) 
+int ipv6client(int port,char*address,char*iterface, int bytes) 
 { 
-    char buf_tx[buff_size];
     int sockfd; 
     struct sockaddr_in6 servaddr; 
-    
+    char data[bytes];
+    for(int i=0;i<bytes;i++){
+        data[i] = 'a';
+    }
+    data[bytes-1]='\0';    
     /* Socket creation */
     sockfd = socket(PF_INET6, SOCK_STREAM, 0); 
     if (sockfd == -1) 
@@ -46,9 +49,7 @@ int ipv6client(int port,char*address,char*iterface,long unsigned int buff_size)
   
     /* send test sequences*/
     while(1){
-        read(0,buf_tx,buff_size);
-        if(strstr(buf_tx,"exit")) break;
-        write(sockfd, buf_tx, sizeof(buf_tx));
+        send(sockfd,data,strlen(data),0);
     }
      
     /* close the socket */

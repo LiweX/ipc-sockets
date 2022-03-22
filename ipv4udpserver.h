@@ -1,1 +1,1 @@
-int ipv4udpserver(int port, char* address);
+int ipv4udpserver(int port, char* address,long int* bytes);

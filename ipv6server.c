@@ -1,4 +1,5 @@
-#include <unistd.h>  
+#include <unistd.h>
+#include <stdlib.h>  
 #include <netdb.h> 
 #include <netinet/in.h> 
 #include <sys/socket.h> 
@@ -10,17 +11,16 @@
 #include <string.h> 
 
 /* server parameters */
-#define BUF_SIZE        100               /* Buffer rx, tx max size  */
+#define BUF_SIZE        1000000               /* Buffer rx, tx max size  */
 #define BACKLOG         5                 /* Max. client pending connections  */
 
-int ipv6server(int port, char* address,char* interface)          /* input arguments are not used */
+int ipv6server(int port, char* address,char* interface,long int* bytes)          /* input arguments are not used */
 { 
     int sockfd;  /* listening socket and connection socket file descriptors */
     unsigned int len;     /* length of client address */
     struct sockaddr_in6 servaddr, client; 
     
     long int len_rx;                     /* received and sent length, in bytes */
-    char buff_tx[BUF_SIZE] = "Hello client, I am the server";
     char buff_rx[BUF_SIZE];   /* buffers for reception  */
     
      
@@ -29,7 +29,7 @@ int ipv6server(int port, char* address,char* interface)          /* input argume
     if (sockfd == -1) 
     { 
         fprintf(stderr, "[IPV6_SERVER-error]: socket creation failed. %d: %s \n", errno, strerror( errno ));
-        return -1;
+        exit(EXIT_FAILURE);
     } 
     else
     {
@@ -39,7 +39,7 @@ int ipv6server(int port, char* address,char* interface)          /* input argume
     int flag = 1 ;
 	if(setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag)) == -1) {
         fprintf(stderr, "[IPV6_SERVER-error]: socket creation failed. %d: %s \n", errno, strerror( errno ));
-		return -1;
+		exit(EXIT_FAILURE);
 	}
 
     /* clear structure */
@@ -55,7 +55,7 @@ int ipv6server(int port, char* address,char* interface)          /* input argume
     if ((bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr))) != 0) 
     { 
         fprintf(stderr, "[IPV6_SERVER-error]: socket bind failed. %d: %s \n", errno, strerror( errno ));
-        return -1;
+        exit(EXIT_FAILURE);
     } 
     else
     {
@@ -66,7 +66,7 @@ int ipv6server(int port, char* address,char* interface)          /* input argume
     if ((listen(sockfd, BACKLOG)) != 0) 
     { 
         fprintf(stderr, "[IPV6_SERVER-error]: socket listen failed. %d: %s \n", errno, strerror( errno ));
-        return -1;
+        exit(EXIT_FAILURE);
     } 
     else
     {
@@ -75,7 +75,6 @@ int ipv6server(int port, char* address,char* interface)          /* input argume
     
     len = sizeof(client); 
     int n_con = 0;
-      /* Accept the data from incoming sockets in a iterative way */
       while(1)
       {
         int connfd = accept(sockfd, (struct sockaddr *)&client, &len);
@@ -85,7 +84,7 @@ int ipv6server(int port, char* address,char* interface)          /* input argume
             if (connfd < 0) 
             { 
                 fprintf(stderr, "[IPV6_SERVER-error]: connection not accepted. %d: %s \n", errno, strerror( errno ));
-                return -1;
+                exit(EXIT_FAILURE);
             } 
             else
             {              
@@ -102,12 +101,12 @@ int ipv6server(int port, char* address,char* interface)          /* input argume
                     {
                         printf("[IPV6_SERVER]: client %d socket closed \n\n",n_con);
                         close(connfd);
-                        break; 
+                        exit(EXIT_SUCCESS);
                     }
                     else
                     {
-                    write(connfd, buff_tx, strlen(buff_tx));
-                    printf("[IPV6_CLIENT_%d]: %s \n", n_con, buff_rx);
+                        //printf("[IPV4_TCP_CLIENT_%d]: %s \n", n_con, buff_rx);
+                        *bytes+=len_rx;                        
                     }            
                 }  
             }      

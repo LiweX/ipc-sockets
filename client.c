@@ -16,7 +16,7 @@ int main(int argc, char* argv[]){
         exit(EXIT_FAILURE);
     }
     char *protocol= argv[1];
-    long unsigned int buff_size = (long unsigned int)atoi(argv[4]);
+    int buff_size = atoi(argv[4]);
     int port = atoi(argv[3]);
     char *address = argv[2];
     char *interface = argv[5];

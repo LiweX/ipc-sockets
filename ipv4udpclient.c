@@ -10,12 +10,15 @@
 
 
 
-int ipv4udpclient(int port,char*address,long unsigned int buff_size) 
+int ipv4udpclient(int port,char*address, int bytes) 
 {
-    char buf_tx[buff_size];
     int sockfd; 
     struct sockaddr_in servaddr; 
-    
+    char data[bytes];
+    for(int i=0;i<bytes;i++){
+        data[i] = 'a';
+    }
+    data[bytes-1]='\0';
     /* Socket creation */
     sockfd = socket(AF_INET, SOCK_DGRAM, 0); //udp socket
     if (sockfd == -1) 
@@ -37,8 +40,7 @@ int ipv4udpclient(int port,char*address,long unsigned int buff_size)
 
     while (1)
     {
-        read(0,buf_tx,buff_size);
-        sendto(sockfd, (const char *)buf_tx, sizeof(buf_tx),
+        sendto(sockfd, (const char *)data, strlen(data),
         MSG_CONFIRM, (const struct sockaddr *) &servaddr, 
             sizeof(servaddr));
     }

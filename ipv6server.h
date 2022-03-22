@@ -1,1 +1,1 @@
-int ipv6server(int port, char* address,char* interface);
+int ipv6server(int port, char* address,char* interface,long int* bytes);

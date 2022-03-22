@@ -9,10 +9,10 @@
 #include <string.h> 
 
 /* server parameters */
-#define BUF_SIZE        100               /* Buffer rx, tx max size  */
+#define BUF_SIZE        1000000               /* Buffer rx, tx max size  */
 #define BACKLOG         5                 /* Max. client pending connections  */
 
-int ipv4udpserver(int port, char* address)          /* input arguments are not used */
+int ipv4udpserver(int port, char* address,long int* bytes)          /* input arguments are not used */
 { 
     int sockfd;  /* listening socket and connection socket file descriptors */
     unsigned int len;     /* length of client address */
@@ -59,7 +59,7 @@ int ipv4udpserver(int port, char* address)          /* input arguments are not u
         long int n = recvfrom(sockfd, (char *)buff_rx, sizeof(buff_rx), 
                 MSG_WAITALL, ( struct sockaddr *) &client,
                 &len);
-        printf("Client udp: %s cantidad de bytes:%ld\n", buff_rx,n);
+        *bytes+=n;
     } 
     return 0;
 }                      

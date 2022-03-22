@@ -1,10 +1,10 @@
 typedef struct
 {
-    double ipv4_tcp;
-    double ipv4_udp;
-    double ipv6_tcp;
-}   Speeds;
+    long int ipv4_tcp;
+    long int ipv4_udp;
+    long int ipv6_tcp;
+    long int total;
+}   Bytes;
 
-void reset_speeds(Speeds* speeds);
-void print_speeds(Speeds* speeds);
-long int sumar_speeds(long int*speeds_buffer,int* n_clients);
+void set_struct(Bytes* bytes);
+void sumar_bytes(Bytes* bytes);
