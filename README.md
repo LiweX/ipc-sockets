@@ -6,12 +6,12 @@ Sistemas Operativos II - Laboratorio I IPC
 Con el fin de resolver el trabajo con soluciones incrementales primero se implemento solo un servidor ipv4 tcp que era testeado con la herramienta `netcat`
 Dicho servidor cumple con el siguente diagrama de flujo.
 
-![Diagrama de flujo servidor](/img/tcpserverflowdiagram.png)
+![Diagrama de flujo servidor](https://raw.githubusercontent.com/ICOMP-UNC/soii---2022---laboratorio-i-LiweX/main/img/tcpserverflowdiagram.png?token=GHSAT0AAAAAABSUYFRCWHAIALL7PHYXUUO6YSDNYTA)
 
 Teniendo un servidor funcionando, se modifico para que pueda ser programable, es decir, ahora el programa era capaz de recibir como parametros la direccion ip y el puerto a escuchar.
 Satisfecho con la construccion del servidor se paso a la implementacion del cliente ipv4 tcp que cumple con el siguiente diagrama de flujo
 
-![Diagrama de flujo cliente](/img/tcpclientflowdiagram.png)
+![Diagrama de flujo cliente](https://raw.githubusercontent.com/ICOMP-UNC/soii---2022---laboratorio-i-LiweX/main/img/tcpclientflowdiagram.png?token=GHSAT0AAAAAABSUYFRCMGGI3ZGCQ42P32A6YSDNY7A)
 
 El cliente tambien es programable, se le pasa como argumentos la direccion ip, puerto y cantidad de bytes a mandar.
 
@@ -47,5 +47,5 @@ ej: ./server 127.0.0.1 ::1 8080 lo
 ```
 En este caso se esta instanciando un server que esta escuchando en el puerto 8080 en la direccion de loopback
 ### Ejemplo de ejecución
-![Captura de pantalla](/img/screenshot.png)
+![Captura de pantalla](https://raw.githubusercontent.com/ICOMP-UNC/soii---2022---laboratorio-i-LiweX/main/img/screenshot.png?token=GHSAT0AAAAAABSUYFRCUPTIBUZQ34NITHYWYSDNZLQ)
 En esta caputra se pueden ver dos clientes tcp ipv4 dos clientes tcp ipv6 y dos clientes udp ipv4 (las terminales pequeñas), el servidor (en la terminal de vscode) printeando la velocidad en Mbits/s y el `nload` viendo el trafico de la interfaz de loopback y los resultados se corresponden bastante bien.
