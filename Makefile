@@ -30,4 +30,4 @@ tools.o: tools.c tools.h
 	gcc $(CFLAGS) -c tools.c
 
 clean:
-	rm -f *.o client server
+	rm -f *.o client server log.txt

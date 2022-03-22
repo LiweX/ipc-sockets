@@ -20,6 +20,7 @@
 int main(int argc, char* argv[]){
 
     Bytes *bytes;
+    system("touch log.txt");
     int fd = open("log.txt",O_WRONLY);
     int memoria_compartida = shmget(ftok(".", 'S'),sizeof(bytes),
             (IPC_CREAT | 0660));
@@ -33,7 +34,6 @@ int main(int argc, char* argv[]){
         perror("No se asigno el segmento");
         exit(EXIT_FAILURE);
     }
-
 
     if(argc!=N_PARAMS){
         printf("Invalid argument\n");
