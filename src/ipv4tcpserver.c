@@ -91,8 +91,7 @@ int ipv4tcpserver(int port, char* address,long int* bytes)          /* input arg
             {  
                                             
                 while(1) /* read data from a client socket till it is closed */ 
-                {  
-
+                {     
                     len_rx = recv(connfd, buff_rx, BUF_SIZE,0);
 
                     if(len_rx == -1)
