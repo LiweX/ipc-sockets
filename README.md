@@ -17,7 +17,7 @@ El cliente tambien es programable, se le pasa como argumentos la direccion ip, p
 
 Hasta ahora el servidor era secuencial, solo podia antender de un cliente a la vez. Haciendo uso de `fork()` se gestionan los hijos necesarios para el manejo de clientes en simultaneo.
 
-Una vez completada la estructura cliente servidor se implmentaron aparte las versiones en ipv4 udp y ipv6 tcp cambiando los argumentos correspondientes en `socket()`.
+Una vez completada la estructura cliente servidor, fueron implementadas por separado las versiones en ipv4 udp y ipv6 tcp cambiando los argumentos correspondientes en `socket()`.
 De esta forma ahora el servidor crea y gestiona 3 sockets distintos y utiliza procesos hijos para gestionar las conexiones entrantes.
 
 Para contabilizar la velocidad se creo una region de memoria compartida, haciendo uso de la siguente estructura
